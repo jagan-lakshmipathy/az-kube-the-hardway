@@ -1,0 +1,22 @@
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml --kubeconfig=kubernetes-the-hard-way.kubeconfig 
+
+kubectl proxy --kubeconfig=kubernetes-the-hard-way.kubeconfig 
+
+
+cat > dashboard-adminuser.yaml <<EOF 
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+EOF
+
+kubectl apply -f dashboard-adminuser.yaml --kubeconfig=kubernetes-the-hard-way.kubeconfig 
+
+
+kubectl create clusterrolebinding dashboard-admin -n default --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:admin-user --kubeconfig=kubernetes-the-hard-way.kubeconfig 
+
+
+kubectl -n kubernetes-dashboard create token admin-user--kubeconfig=kubernetes-the-hard-way.kubeconfig 
+
+eyJhbGciOiJSUzI1NiIsImtpZCI6IkVPM2YzNGNMQVdnV2R5YXl5S2cwd1R0a0RKSVh0U3dZOHV5R0ZXNnUxZlkifQ.eyJhdWQiOlsiaHR0cHM6Ly86NjQ0MyJdLCJleHAiOjE3MzI4OTc4NTQsImlhdCI6MTczMjg5NDI1NCwiaXNzIjoiaHR0cHM6Ly86NjQ0MyIsImt1YmVybmV0ZXMuaW8iOnsibmFtZXNwYWNlIjoia3ViZXJuZXRlcy1kYXNoYm9hcmQiLCJzZXJ2aWNlYWNjb3VudCI6eyJuYW1lIjoiYWRtaW4tdXNlciIsInVpZCI6IjAwMDFlMjExLWRhZjEtNGE3NC1hOWYwLWUyNGJlMmUyYzZiYyJ9fSwibmJmIjoxNzMyODk0MjU0LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.moyvQDPClcrRD0zwsz2MIiX4KBf_hMik-M-zaL1OyQOSRbbwNrl81U327uzHbQu6MDJ9ErQglZyb7-f-ZG6fzzb4HHdZgMf_6QJYelmzHRiO77r3X5ROTvyz3PBtaOwAXF7M8Zw5Qoqkbf97IpeV10fBZjRarQEwS2K8gQlTBZmoNvkhuTCWO2DxnUMOeLL3vUVagU5FeXcy3fVFZYzUG8KTPcG94LmRBjNRlixSVG0rVG22qZLSXeEYXk_c1csUbxhTNVS2rZoqEUNHfnDwvhjf0oTgJU2p50N66fxXUtV6iSdexFwYWswq0rL4GfHrxm96dHrgNzovucKC1cqkOg
