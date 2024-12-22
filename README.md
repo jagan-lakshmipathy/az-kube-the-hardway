@@ -1,9 +1,9 @@
-# Kubernetes the hardway in Azure
+# Kubernetes the hard way in Azure
 ###### Jagan Lakshmipathy 
 ###### 12/21/2024
 
 ### 1. Introduction
-In this repo we will work through the details on how to stand up and deploy Kuberenetes cluster the hard way in Azure. We mean the hardway to refer to a self managed cluster as opposed to managed clusters offered by major cloud providers like Azure, DigitalOcean, GCP and AWS. This repo was inspired by this tutorial [tutorial](https://github.com/ivanfioravanti/kubernetes-the-hard-way-on-azure/blob/master/README.md). Which inturn is a fork of the [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) tutorial by [Kelsey Hightower](https://x.com/i/flow/login?redirect_after_login=%2Fkelseyhightower). 
+In this repo we will work through the details on how to stand up and deploy Kuberenetes cluster the hard way in Azure. We mean the hard way to refer to a self managed cluster as opposed to managed clusters offered by major cloud providers like Azure, DigitalOcean, GCP and AWS. This repo was inspired by this [tutorial](https://github.com/ivanfioravanti/kubernetes-the-hard-way-on-azure/blob/master/README.md), which in turn is a fork of the [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way) tutorial by [Kelsey Hightower](https://x.com/i/flow/login?redirect_after_login=%2Fkelseyhightower). 
 
 ### 2. Following are the steps
 We have provided 23 shell scripts which we will use in different parts of this deployment. This deployment will leverage the Azure and we will deploy 3 controller nodes to deploy kubernetes control plane components and 2 worker nodes run workloads and to deploy kublet components. Our scripts will be run either in a controller node, or a worker node or you local host where you run kubectl client to control the kubernetes from. 
