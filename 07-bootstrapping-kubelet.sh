@@ -121,7 +121,7 @@ echo "05-Configured Containerd."
 {
   sudo mv ${HOSTNAME}-key.pem ${HOSTNAME}.pem /var/lib/kubelet/
   sudo mv ${HOSTNAME}.kubeconfig /var/lib/kubelet/kubeconfig
-  sudo mv ca.pem /var/lib/kubernetes/
+  sudo mv ca.pem kubernetes-key.pem kubernetes.pem /var/lib/kubernetes/
 }
 
 
