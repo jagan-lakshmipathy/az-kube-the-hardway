@@ -41,32 +41,32 @@ echo "02-Made directories for each worker binary."
 echo "03-Installed worker binaries."
 
 POD_CIDR="$(echo $(curl --silent -H Metadata:true "http://169.254.169.254/metadata/instance/compute/tags?api-version=2017-08-01&format=text" | sed 's/\;/\n/g' | grep pod-cidr) | cut -d : -f2)"
-cat <<EOF | sudo tee /etc/cni/net.d/10-bridge.conf
-{
-    "cniVersion": "0.4.0",
-    "name": "bridge",
-    "type": "bridge",
-    "bridge": "cnio0",
-    "isGateway": true,
-    "ipMasq": true,
-    "ipam": {
-        "type": "host-local",
-        "ranges": [
-          [{"subnet": "${POD_CIDR}"}]
-        ],
-        "routes": [{"dst": "0.0.0.0/0"}]
-    }
-}
-EOF
+#cat <<EOF | sudo tee /etc/cni/net.d/10-bridge.conf
+#{
+#    "cniVersion": "0.4.0",
+#    "name": "bridge",
+#    "type": "bridge",
+#    "bridge": "cnio0",
+#    "isGateway": true,
+#    "ipMasq": true,
+#    "ipam": {
+#        "type": "host-local",
+#        "ranges": [
+#          [{"subnet": "${POD_CIDR}"}]
+#        ],
+#        "routes": [{"dst": "0.0.0.0/0"}]
+#    }
+#}
+#EOF
 
 
-cat <<EOF | sudo tee /etc/cni/net.d/99-loopback.conf
-{
-    "cniVersion": "0.4.0",
-    "name": "lo",
-    "type": "loopback"
-}
-EOF
+#cat <<EOF | sudo tee /etc/cni/net.d/99-loopback.conf
+#{
+#    "cniVersion": "0.4.0",
+#    "name": "lo",
+#    "type": "loopback"
+#}
+#EOF
 echo "04-Configured CNI Networking."
 
 sudo mkdir -p /etc/containerd/
@@ -122,6 +122,8 @@ echo "05-Configured Containerd."
   sudo mv ${HOSTNAME}-key.pem ${HOSTNAME}.pem /var/lib/kubelet/
   sudo mv ${HOSTNAME}.kubeconfig /var/lib/kubelet/kubeconfig
   sudo mv ca.pem kubernetes-key.pem kubernetes.pem /var/lib/kubernetes/
+  sudo mv calico* /opt/cni/bin/
+  sudo mv 10-calico.conf /etc/cni/net.d/
 }
 
 

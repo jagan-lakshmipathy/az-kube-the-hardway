@@ -243,9 +243,12 @@ cfssl gencert \
   -hostname=10.32.0.1,10.240.0.10,10.240.0.11,10.240.0.12,10.240.0.20,10.240.0.21,${KUBERNETES_PUBLIC_ADDRESS},127.0.0.1,${KUBERNETES_HOSTNAMES} \
   -profile=kubernetes \
   kubernetes-csr.json | cfssljson -bare kubernetes
+
 echo '10-Generated Kubernetes Private Key and Certificate.'
 ls -al kubernetes*.pem
 
+{
+  
 cat > service-account-csr.json <<EOF
 {
   "CN": "service-accounts",

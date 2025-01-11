@@ -5,7 +5,7 @@ ls -al calico*
 echo '01-Downloaded Calico Binaries.'
 
 
-chmod 711 calco*
+chmod 711 calico*
 ls -al calico*
 echo '02-Set the execute mode.'
 
@@ -18,20 +18,17 @@ cat > 10-calico.conf <<EOF
 {
   "name": "calico",
   "type": "calico",
-  "etcd_endpoints": "https://${ETCD_IP}:2379",
+  "etcd_endpoints": "${ETCD_IP}",
   "etcd_key_file": "/var/lib/kubernetes/kubernetes-key.pem",
   "etcd_cert_file": "/var/lib/kubernetes/kubernetes.pem",
   "etcd_ca_cert_file": "/var/lib/kubernetes/ca.pem",
   "log_level": "info",
   "ipam": {
-    "type": "calico-ipam"
+    "type": "calico-ipam",
+    "subnet": "usePodCidr"
   },
   "policy": {
     "type": "calico"
-  },
-  "ipam": {
-    "type": "calico-ipam",
-    "subnet": "usePodCidr"
   }
 }
 EOF
