@@ -218,3 +218,10 @@ echo "07-Configured kube-proxy."
 
 
 echo "08-Started Worker Services kubelet, containerd, and kube-proxy."
+
+{
+  sudo mkdir -p /var/lib/calico
+  sudo su -c 'hostname > /var/lib/calico/nodename'
+}
+echo "09-Created /var/lib/calico/nodename."
+
