@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: calico-node
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: calico-node
+  template:
+    metadata:
+      labels:
+        k8s-app: calico-node
+    spec:
+      containers:
+      - name: calico-node
+        image: calico/node:v3.20.6   # Use the appropriate Calico version
+        env:
+        - name: ETCD_ENDPOINTS
+          value: "https://10.240.0.10:2379"
+        - name: ETCD_KEY_FILE
+          value: "/var/lib/kubernetes/kubernetes-key.pem"
+        - name: ETCD_CERT_FILE
+          value: "/var/lib/kubernetes/kubernetes.pem"
+        - name: ETCD_CA_CERT_FILE
+          value: "/var/lib/kubernetes/ca.pem"
+        volumeMounts:
+        - name: cni-bin
+          mountPath: /opt/cni/bin
+        - name: cni-net
+          mountPath: /etc/cni/net.d
+        - name: var-lib-calico
+          mountPath: /var/lib/calico
+      volumes:
+      - name: cni-bin
+        hostPath:
+          path: /opt/cni/bin
+      - name: cni-net
+        hostPath:
+          path: /etc/cni/net.d
+      - name: var-lib-calico
+        hostPath:
+          path: /var/lib/calico
