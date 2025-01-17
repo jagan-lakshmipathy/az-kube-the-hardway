@@ -1,29 +1,24 @@
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
-  name: calico-node
+  name: calico-kube-controllers
   namespace: kube-system
   labels:
-    k8s-app: calico-node
+    k8s-app: calico-kube-controllers
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      k8s-app: calico-node
+      k8s-app: calico-kube-controllers
   template:
     metadata:
       labels:
-        k8s-app: calico-node
+        k8s-app: calico-kube-controllers
     spec:
-      hostNetwork: true
-      serviceAccountName: calico-node
-      tolerations:
-        - key: node-role.kubernetes.io/master
-          effect: NoSchedule
-        - key: node-role.kubernetes.io/control-plane
-          effect: NoSchedule
+      serviceAccountName: calico-kube-controllers
       containers:
-        - name: calico-node
-          image: calico/node:v3.20.6
+        - name: calico-kube-controllers
+          image: calico/kube-controllers:v3.20.6
           env:
             - name: DATASTORE_TYPE
               value: "etcd"
@@ -35,14 +30,8 @@ spec:
               value: "/var/lib/kubernetes/kubernetes.pem"
             - name: ETCD_CA_CERT_FILE
               value: "/var/lib/kubernetes/ca.pem"
-            - name: FELIX_LOGSEVERITYSCREEN
-              value: "info"
-            - name: IP_AUTODETECTION_METHOD
-              value: "can-reach=8.8.8.8"
-            - name: CALICO_NETWORKING_BACKEND
-              value: "none"
-          securityContext:
-            privileged: true
+            - name: ENABLED_CONTROLLERS
+              value: "node,policy,workloadendpoint"
           volumeMounts:
             - name: cni-bin
               mountPath: /opt/cni/bin
@@ -53,17 +42,10 @@ spec:
             - mountPath: /var/lib/kubernetes
               name: etcd-certs
               readOnly: true
-            - mountPath: /lib/modules
-              name: lib-modules
-              readOnly: true
       volumes:
         - name: etcd-certs
           hostPath:
             path: /var/lib/kubernetes
-            type: DirectoryOrCreate
-        - name: lib-modules
-          hostPath:
-            path: /lib/modules
             type: DirectoryOrCreate
         - name: cni-bin
           hostPath:

@@ -56,11 +56,16 @@ Run the 08-configure-kubectl.sh locally. This will generate the kubernetes-the-h
 ```
 Ensure the CNI configuration file (10-calico.conf) is correctly placed in /etc/cni/net.d/. Confirm 10-calico.yaml iscorrect with the following essential configurations: (1) CNI Type: calico, (2) IPAM: Ensure it’s set to use calico-ipam, (3) ETCD Endpoints and Certificates: You need to explicitly set the endpoints and certificates for the calico CNI to connect to your etcd store. Example of a valid CNI configuration (/etc/cni/net.d/10-calico.conf): The paths to the certificates (kubernetes-key.pem, kubernetes.pem, and ca.pem) are correct for your Kubernetes setup.
 
+At the time of Pod Creation, Kublet invokes the Calico CNI Plugin, sets up nework by allocating IP for the POD, sets up veth pairs, and configures routes. Enforces policy as configured in the kubernetes network policy and applies the iptables. Uses a datastore (e.g., etcd) to store the network state. Pod traffic is effected using (e.g., BGP, OR IP-in-IP). So, to get calico running, we need to configure the calico node (DaemonSet) and calico kube-controller (Deployment).
+
 Finally, run the following command to run the calico.
 ```
     kubectl apply -f calico-node-daemonset.yaml  --kubeconfig=kubernetes-the-hard-way.kubeconfig
+    kubectl apply -f calico-node-daemonset.yaml  --kubeconfig=kubernetes-the-hard-way.kubeconfig
+    kubectl apply -f calico-node-daemonset.yaml  --kubeconfig=kubernetes-the-hard-way.kubeconfig
 ```
-Verify the calico binaries are located in /opt/cni/bin and are in executable mode in every worker node. And also make sure that 10-calico.conf is located under /etc/cni/net.d. Make sure it looks good. Ensure that the certificates (kubernetes-key.pem, kubernetes.pem, and ca.pem) are correct, located under /var/lib/kubernetes and have the proper permissions. Now apply 
+#### 2.10 Create Kubernetes Configurations for Kuberenetes API
+
 #### 2.11 Create Kubernetes Configurations for Kuberenetes API
 #### 2.12 Verify Nodes & Components
 #### 2.13 Create Pod Routes
