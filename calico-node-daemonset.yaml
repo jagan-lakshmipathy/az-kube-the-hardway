@@ -26,7 +26,7 @@ spec:
           image: calico/node:v3.20.6
           env:
             - name: DATASTORE_TYPE
-              value: "etcd"
+              value: "etcdv3"
             - name: ETCD_ENDPOINTS
               value: "https://10.240.0.10:2379,https://10.240.0.11:2379,https://10.240.0.12:2379"
             - name: ETCD_KEY_FILE
@@ -41,6 +41,8 @@ spec:
               value: "can-reach=8.8.8.8"
             - name: CALICO_NETWORKING_BACKEND
               value: "none"
+            - name: CALICO_K8S_CLUSTER_NAME
+              value: "none"  # Disable Kubernetes interaction
           securityContext:
             privileged: true
           volumeMounts:
