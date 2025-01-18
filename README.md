@@ -60,9 +60,9 @@ At the time of Pod Creation, Kublet invokes the Calico CNI Plugin, sets up newor
 
 Finally, run the following command to run the calico.
 ```
+    kubectl apply -f calico-sa-role-binding-config.yaml  --kubeconfig=kubernetes-the-hard-way.kubeconfig
     kubectl apply -f calico-node-daemonset.yaml  --kubeconfig=kubernetes-the-hard-way.kubeconfig
-    kubectl apply -f calico-node-daemonset.yaml  --kubeconfig=kubernetes-the-hard-way.kubeconfig
-    kubectl apply -f calico-node-daemonset.yaml  --kubeconfig=kubernetes-the-hard-way.kubeconfig
+    kubectl apply -f calico-kube-controllers.yaml  --kubeconfig=kubernetes-the-hard-way.kubeconfig
 ```
 #### 2.10 Create Kubernetes Configurations for Kuberenetes API
 
