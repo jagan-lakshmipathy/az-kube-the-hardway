@@ -35,6 +35,11 @@ At this step, first we will copy 06-bootstrapping-cp.sh, and 06-setup-kubernetes
 
 Now, run 06-setup-frontend-lb.sh and 06-verify-controller.sh locally in that order. The frontend-lb script will create the LB and verify script will mruncurl command with a sample payload to verify the kubernetes version. 
 
+Run the 08-configure-kubectl.sh locally. This will generate the kubernetes-the-hard-way.kubeconfig. From now on you will use this kubeconfig to connct to the cluster. Run the following commands locally to create the cluster roles and rolebindings for worker nodes to access.
+```
+    kubectl apply -f clusterrole.yaml
+    kubectl apply -f clusterrolebinding.yaml
+```
 #### 2.7 Bootstrap Kubelet Components
 Now that, we have setup the Control Plane, lets setup the Worker Nodes. Bootstrapping kubelet is the central piece in the worker node setup. Note, we added kubernetes.pem and kubernetes-key.pem files to /usr/lib/kubernetes directory at line 124 of 07-bootstrapping-kubelet.sh. We will use these files when configuring the calico (see the generated 10-calico.conf referring to the kuberenetes*.pem files). 
 
@@ -43,12 +48,25 @@ So, first run the 07-get-calico-resources.sh. This will generate the 10-calico.c
 Secondly, remote copy and run the 07-bootstrapping-kubelet.sh in each worker nodes and copy 07-verify-workers-from-controller.sh to controller-0. And then finally, run the 07-verify-workers-from-controller.sh to verify the kubernetes setup. We get the nodes using kubectl from the controller to see all the worker nodes.
 
 #### 2.8 Setup Kubectl to remote to your Kubernetes Cluster
-Run the 08-configure-kubectl.sh locally. This will generate the kubernetes-the-hard-way.kubeconfig. From now on you will use this kubeconfig to connct to the cluster. Run the 08-verify-kubectl.sh locally to verify the set up by listing the component statuses and nodes. This script runs these commands:
+Run the 08-verify-kubectl.sh locally to verify the set up by listing the component statuses and nodes. This script runs these commands:
 ```
     kubectl get componentstatuses --kubeconfig=kubernetes-the-hard-way.kubeconfig
     kubectl get nodes --kubeconfig=kubernetes-the-hard-way.kubeconfig
 ```
-
+Run the following commands to verify ETCD, and API servers accessible from worker nodes
+```
+    curl --key /var/lib/kubernetes/kubernetes-key.pem  --cert /var/lib/kubernetes/kubernetes.pem --cacert /var/lib/kubernetes/ca.pem     https://10.240.0.11:2379/health
+    curl --key /var/lib/kubernetes/kubernetes-key.pem  --cert /var/lib/kubernetes/kubernetes.pem --cacert /var/lib/kubernetes/ca.pem     https://10.240.0.11:6443/healthz
+```
+To verify kublet API from the worker nodes. 
+```
+    curl -s --cacert /var/lib/kubernetes/ca.pem https://127.0.0.1:10250/healthz
+```
+Finally, check the network connectivity to API servers using the following:
+```
+    nc -zv 10.240.0.12  6443
+    telnet 10.240.0.12  6443rt /var/lib/kubernetes/ca.pem https://127.0.0.1:10250/healthz
+```
 #### 2.9 Running Calico
  Ensure Calico binaries are in the /opt/cni/bin directory. The Calico binaries are calico and calico-ipam. Make sure that the calico and calico-ipam binaries are executable. Confirm that the etcd instance is accessible from the nodes where Calico is running. You can do this by testing the connection to the etcd endpoints you’ve provided in your 10-calico.yaml. The following is the command:
 ```
