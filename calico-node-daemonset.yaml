@@ -43,6 +43,8 @@ spec:
               value: "none"
             - name: CALICO_K8S_CLUSTER_NAME
               value: "none"  # Disable Kubernetes interaction
+            - name: WAIT_FOR_DATASTORE
+              value: "true"  # Add this line
           securityContext:
             privileged: true
           volumeMounts:
